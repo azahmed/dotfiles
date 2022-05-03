@@ -1,0 +1,63 @@
+Renew Okta credentials
+ $ docker run -it --rm -v ~/.aws:/root/.aws IMAGE_NAME -c "oktashell.sh -u user@email.com.au -p okta"
+ ######
+ Password:
+Authentication successful
+Okta provided an invalid token; fetching a new one.
+Available MFA tokens:
+1) push
+2) totp
+Choose a MFA factor: 1
+Waiting for push notification to be verified ...
+Waiting for push notification to be verified ...
+Waiting for push notification to be verified ...
+Waiting for push notification to be verified ...
+User user@email.com is now authenticated with MFA via Okta API
+Available roles:
+1) arn:aws:iam::IAM_NAME:role/ROLE1
+2) arn:aws:iam::IAM_NAME:role/ROLE2
+Choose a role: 1
+Credentials have been written to /root/.aws/credentials profile [okta]
+######
+
+Check your cluster
+---------------------
+ kubectl config current-context
+ ## arn:aws:eks:ap-southeast-2:IAM_ROLE3:cluster/blah-intg-nonprod-01
+
+Login to cluster?
+-----------------
+aws eks --region ap-southeast-2 --profile blah-intg-nonprod update-kubeconfig --name blah-intg-nonprod-01
+
+########
+PS C:\tmp\blah-intg-nonprod-01> aws eks --region ap-southeast-2 --profile blah-intg-nonprod update-kubeconfig --name blah-intg-nonprod-01
+Updated context arn:aws:eks:ap-southeast-2:IAM_ROLE3:cluster/blah-intg-nonprod-01 in C:\Users\ahmeda\.kube\config
+PS C:\tmp\blah-intg-nonprod-01> kubectl config current-context
+arn:aws:eks:ap-southeast-2:IAM_ROLE3:cluster/blah-intg-nonprod-01
+PS C:\tmp\blah-intg-nonprod-01>
+##############
+
+Generate secret
+----------------
+kubectl create secret generic fip-onprem-cacerts --dry-run=client --from-file=keystore.jks=wssit1int.jks -o json >fip-onprem-cacerts-intg-nonprod-01.json
+#######
+PS C:\tmp\blah-intg-nonprod-01> kubectl create secret generic fastbizlocal-with-oracle-cacerts --dry-run=client --from-file=keystore.jks=wssit1int.jks -o json >input-secret-intg-nonprod-01.json
+PS C:\tmp\blah-intg-nonprod-01> dir
+
+
+    Directory: C:\tmp\blah-intg-nonprod-01
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        19/11/2021   6:33 PM            776 Commands.txt
+-a----        19/11/2021   6:34 PM          16408 input-secret-intg-nonprod-01.json
+-a----        19/11/2021   3:27 PM           5988 wssit1int.jks
+
+
+PS C:\tmp\blah-intg-nonprod-01>
+###################
+
+Seal secret (do on git bash)
+-----------
+kubeseal --scope cluster-wide --format=json < me-onprem-cacerts-intg-nonprod-01.json >secret-me-onprem-cacerts-intg-nonprod-01.json
