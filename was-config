@@ -1,0 +1,13 @@
+[profile az-non-prod]
+sso_start_url = https://my-sso-url/start#/
+sso_region = ap-southeast-2
+sso_account_id = meAccount
+sso_role_name = daRoleName
+region = ap-southeast-2
+
+[profile az-prod]
+sso_start_url = https://my-sso-url/start#/
+sso_region = ap-southeast-2
+sso_account_id = meAccountPrd
+sso_role_name = daRoleNamePrd
+region = ap-southeast-2
