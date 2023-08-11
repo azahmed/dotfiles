@@ -2,10 +2,12 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/ahmeda/.oh-my-zsh"
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
+
+export ZSH="/Users/aahmed/.oh-my-zsh"
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/amazon-corretto-11.jdk/Contents/Home
 export AWS_REGION="ap-southeast-2"
-export AWS_PROFILE="streamotion-platform-nonprod"
+
+#export AWS_PROFILE="streamotion-platform-nonprod"
 
 
 # Set name of the theme to load --- if set to "random", it will
@@ -75,13 +77,13 @@ ZSH_THEME="agnoster"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
- #git
+ git
  macos
 
 )
 
 source $ZSH/oh-my-zsh.sh
-source /Users/ahmeda/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source /Users/ahmeda/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # User configuration
 
@@ -113,9 +115,9 @@ source /Users/ahmeda/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 alias uz="source ~/.zshrc"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 # development
-alias C="~/code/"
-alias or="docker run -it --rm -v ~/.aws:/root/.aws kayosportsau/ubuntu-okta:1.0.1 -c 'oktashell.sh -u asrarz.ahmed@foxtel.com.au -p okta'"
-
+alias C="~/Code/"
+alias or="docker run -it --rm -v ~/.aws:/root/.aws kayosportsau/ubuntu-okta:1.0.1 -c 'oktashell.sh -u asrarz.ahmed@blah.com.au -p okta'"
+alias np-bastion="ssh -A aahmed@np-bastion.pexa.io -i ~/.ssh/id_rsa"
 ### Functions Start ###
 ## Docker related
 alias dps="docker ps"
@@ -171,6 +173,19 @@ function findpid() {
     ps -e | grep "$@"
 }
 ## Git Functions
+
+# SSH Functions Start
+function sshTunnelMq() {
+  ssh -L 61617:$@:61617 \
+  -L 8162:$@:8162 \
+  aahmed@np-bastion
+}
+function sshTunnelMq2() {
+  ssh -L 62617:$@:61617 \
+  -L 8262:$@:8162 \
+  aahmed@np-bastion
+}
+# SSH Functions End
 alias gp='git pull'
 alias gpp='git pull --prune'
 alias gstatus="git status"
@@ -181,6 +196,12 @@ alias gpushf="git push -f"
 # gen uuid in lowercase
 alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
 
+# Aws aliases
+alias aws-cnp="aws --profile core-non-prod"
+# alias aws="aws --profile pexa-management"
+function aws-cnp-decocde-msg() {
+  aws-cnp sts decode-authorization-message --encoded-message --query DecodedMessage --output text $@
+}
 
 function oa() {
     open -a "Atom" $@
@@ -217,7 +238,8 @@ function gmerge() {
     git merge $@
 }
 
-function gca() {
+function gca2() {
+    echo "This is what I got: $@"
     git commit -am $@
 }
 
@@ -236,8 +258,13 @@ function mvGradleCache() {
 }
 
 # Mvn commands
+alias mvn='~/Downloads/apache-maven-3.8.6/bin/mvn'
 alias mci='mvn clean install'
 alias mcif='mvn clean install -U'
 alias mcheck='mvn checkstyle:checkstyle'
 alias mcomp='mvn compile'
 ### Functions End ###
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/local/bin/terraform terraform
+export PATH="${HOMEBREW_PREFIX}/opt/openssl/bin:$PATH"
