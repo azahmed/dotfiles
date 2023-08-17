@@ -117,7 +117,7 @@ alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %
 # development
 alias C="~/Code/"
 alias or="docker run -it --rm -v ~/.aws:/root/.aws kayosportsau/ubuntu-okta:1.0.1 -c 'oktashell.sh -u asrarz.ahmed@blah.com.au -p okta'"
-alias np-bastion="ssh -A aahmed@np-bastion.pexa.io -i ~/.ssh/id_rsa"
+alias np-bastion="ssh -A aahmed@np-bastion.somewhere.com -i ~/.ssh/id_rsa"
 ### Functions Start ###
 ## Docker related
 alias dps="docker ps"
@@ -198,7 +198,7 @@ alias uuidgen='uuidgen | tr "[:upper:]" "[:lower:]"'
 
 # Aws aliases
 alias aws-cnp="aws --profile core-non-prod"
-# alias aws="aws --profile pexa-management"
+# alias aws="aws --profile management"
 function aws-cnp-decocde-msg() {
   aws-cnp sts decode-authorization-message --encoded-message --query DecodedMessage --output text $@
 }
